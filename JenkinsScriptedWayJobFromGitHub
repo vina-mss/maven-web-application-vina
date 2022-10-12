@@ -1,0 +1,33 @@
+node{
+	
+	def mavenHome = tool name: 'maven3.8.6'
+	
+	echo "The Job Name is: ${env.JOB_NAME}"
+	echo "The Node Name is: ${env.NODE_NAME}"
+	echo "The Build Number is: ${env.BUILD_NUMBER}"
+	
+	properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('* * * * *')])])
+
+	stage('CheckOutCode'){
+	git branch: 'development', credentialsId: 'a2555f9e-ea8d-417f-9b2d-680a159edeac', url: 'https://github.com/vina-mss/maven-web-application-vina'
+	}
+	
+	stage('Build'){
+	sh "${mavenHome}/bin/mvn package"
+	}
+	
+	stage('ExecuteSonarQubeReport'){
+	sh "${mavenHome}/bin/mvn clean sonar:sonar"
+    }
+    
+    stage('UploadArtifactsIntoNexus'){
+	sh "${mavenHome}/bin/mvn clean deploy"
+	}
+
+    stage('DeployAppsIntoTomcatServer'){
+	sshagent(['66343db2-2356-4aa5-8739-44ec7de42a34']) {
+		sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@172.31.11.174:/opt/apache-tomcat-9.0.65/webapps"
+	}
+    }
+    
+}
