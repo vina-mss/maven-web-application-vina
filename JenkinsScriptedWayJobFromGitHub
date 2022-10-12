@@ -2,6 +2,8 @@ node{
 	try{
 	def mavenHome = tool name: 'maven3.8.6'
 	
+	slackNotifications('STARTED')
+	
 	echo "The Job Name is: ${env.JOB_NAME}"
 	echo "The Node Name is: ${env.NODE_NAME}"
 	echo "The Build Number is: ${env.BUILD_NUMBER}"
