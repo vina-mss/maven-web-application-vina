@@ -18,7 +18,7 @@ node{
 	sh "${mavenHome}/bin/mvn package"
 	}
 	
-   	/*
+   	// Previos commented lines
 	stage('ExecuteSonarQubeReport'){
 	sh "${mavenHome}/bin/mvn clean sonar:sonar"
     }
@@ -32,7 +32,7 @@ node{
 		sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@172.31.11.174:/opt/apache-tomcat-9.0.65/webapps"
 	}
     }
-    */
+    // Previous commented lines.
    } // Try block Closing
    catch(e){
    currentBuild="FAILURE"
