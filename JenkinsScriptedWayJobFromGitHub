@@ -41,7 +41,7 @@ node('walmartnode'){
    } //Catch Block Closing
    finally{
    //In below line, we are calling function called "slackNotifications and passing the build status dynamically
-   slackNotifications(currentBuild.result) 
+   sendSlackNotifications(currentBuild.result) 
    } //Finally Block Closing
 } // Node Closing
 
